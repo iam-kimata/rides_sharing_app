@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rides_sharing_app/student/members_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -27,7 +28,7 @@ class _HomePageState extends State<HomePage> {
     },
   ]; // Sample hardcoded data
   ScrollController _scrollController = ScrollController();
-  int? currentUserId = 1; // Set to a default user ID for testing
+  int? currentUserId = 1; // Default user ID for testing
   bool isUserScrollingUp = false;
 
   var currentPage = DrawerSections.home;
@@ -77,10 +78,12 @@ class _HomePageState extends State<HomePage> {
             onSelected: (String value) {
               if (value == 'Join Group') {
                 // Logic for joining the group
-                print('Join Group selected');
               } else if (value == 'Members') {
-                // Logic for viewing members
-                print('Members selected');
+                // Navigate to the MembersPage
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const MembersPage()),
+                );
               }
             },
             itemBuilder: (BuildContext context) {
@@ -326,12 +329,12 @@ class MyHeaderDrawer extends StatelessWidget {
   final bool showRole;
 
   const MyHeaderDrawer({
-    Key? key,
+    super.key,
     required this.token,
     required this.userId,
     required this.role,
     required this.showRole,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
