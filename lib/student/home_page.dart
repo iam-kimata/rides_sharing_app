@@ -73,9 +73,39 @@ class _HomePageState extends State<HomePage> {
         title: const Text("ARU Students"),
         backgroundColor: Colors.white,
         actions: [
-          IconButton(
-            onPressed: () {
-              // Dummy functionality for more options
+          PopupMenuButton<String>(
+            onSelected: (String value) {
+              if (value == 'Join Group') {
+                // Logic for joining the group
+                print('Join Group selected');
+              } else if (value == 'Members') {
+                // Logic for viewing members
+                print('Members selected');
+              }
+            },
+            itemBuilder: (BuildContext context) {
+              return [
+                const PopupMenuItem(
+                  value: 'Join Group',
+                  child: Row(
+                    children: [
+                      Icon(Icons.group_add, color: Colors.blue),
+                      SizedBox(width: 8),
+                      Text('Join Group'),
+                    ],
+                  ),
+                ),
+                const PopupMenuItem(
+                  value: 'Members',
+                  child: Row(
+                    children: [
+                      Icon(Icons.people, color: Colors.green),
+                      SizedBox(width: 8),
+                      Text('Members'),
+                    ],
+                  ),
+                ),
+              ];
             },
             icon: const Icon(Icons.more_vert),
           ),
