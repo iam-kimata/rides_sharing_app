@@ -17,12 +17,11 @@ class _SignupPageState extends State<SignupPage> {
   final TextEditingController phoneNumberController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController licensePlateNumberController =
-      TextEditingController();
+  TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController =
-      TextEditingController();
+  TextEditingController();
 
-  // Method to reset all input field controllers
   void resetInputFields() {
     fullNameController.clear();
     phoneNumberController.clear();
@@ -37,11 +36,14 @@ class _SignupPageState extends State<SignupPage> {
     return Scaffold(
       resizeToAvoidBottomInset: true,
       backgroundColor: Colors.white,
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(0),
-        child: AppBar(
-          elevation: 0,
-          backgroundColor: Colors.white,
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: Colors.white,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () {
+            Navigator.pop(context);
+          },
         ),
       ),
       body: SingleChildScrollView(
@@ -51,11 +53,10 @@ class _SignupPageState extends State<SignupPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
-              const SizedBox(height: 30),
               const Text(
                 "Register Now",
                 style: TextStyle(
-                  fontSize: 35,
+                  fontSize: 30,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -146,7 +147,6 @@ class _SignupPageState extends State<SignupPage> {
                   minWidth: double.infinity,
                   height: 60,
                   onPressed: () {
-                    // Handle it locally before implement it actually
                     showDialog(
                       context: context,
                       builder: (BuildContext context) {
@@ -164,7 +164,7 @@ class _SignupPageState extends State<SignupPage> {
                         );
                       },
                     );
-                    resetInputFields(); // Reset input fields after "registration"
+                    resetInputFields();
                   },
                   color: Colors.black,
                   elevation: 0,

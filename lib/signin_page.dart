@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rides_sharing_app/signup_page.dart';
+import 'package:rides_sharing_app/student/home_page.dart';
 
 class SigninPage extends StatelessWidget {
   SigninPage({super.key});
@@ -58,7 +59,10 @@ class SigninPage extends StatelessWidget {
                 ),
                 child: GestureDetector(
                   onTap: () {
-                    print("Sign in clicked. No navigation performed.");
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const HomePage()),
+                    );
                   },
                   child: const Center(
                     child: Text(

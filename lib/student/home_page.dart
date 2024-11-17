@@ -30,6 +30,8 @@ class _HomePageState extends State<HomePage> {
   int? currentUserId = 1; // Set to a default user ID for testing
   bool isUserScrollingUp = false;
 
+  var currentPage = DrawerSections.home;
+
   @override
   void initState() {
     super.initState();
@@ -49,18 +51,17 @@ class _HomePageState extends State<HomePage> {
     if (message.isEmpty) return;
 
     setState(() {
-      // Add the new message to the chat list
       chatList.add({
         "userId": currentUserId,
         "message": message,
         "sendBy": currentUserName,
-        "time": "Now", // Simulating current time
-        "date": "2024-11-17", // Hardcoded date
+        "time": "Now",
+        "date": "2024-11-17",
       });
     });
 
-    _message.clear(); // Clear the message input field after sending
-    scrollToBottom(); // Scroll to bottom after sending
+    _message.clear();
+    scrollToBottom();
   }
 
   @override
@@ -84,7 +85,7 @@ class _HomePageState extends State<HomePage> {
         children: [
           Expanded(
             child: ListView.builder(
-              controller: _scrollController, // Assign the ScrollController
+              controller: _scrollController,
               itemCount: chatList.length,
               itemBuilder: (context, index) {
                 bool isCurrentUser = chatList[index]['userId'] == currentUserId;
@@ -209,6 +210,146 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
+      drawer: Drawer(
+        child: Container(
+          color: Colors.white,
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                MyHeaderDrawer(
+                  token: null,
+                  userId: currentUserId ?? 0,
+                  role: "Chat User",
+                  showRole: false,
+                ),
+                Container(
+                  height: 3,
+                  color: Colors.grey[300],
+                ),
+                MyDrawerList(),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
+
+  Widget MyDrawerList() {
+    return Container(
+      padding: const EdgeInsets.only(top: 15),
+      child: Column(
+        children: [
+          menuItem(1, "Home", Icons.home, currentPage == DrawerSections.home),
+          menuItem(2, "Request Ride", Icons.directions_car,
+              currentPage == DrawerSections.request),
+          menuItem(3, "Driver Response", Icons.feedback,
+              currentPage == DrawerSections.response),
+        ],
+      ),
+    );
+  }
+
+  Widget menuItem(int id, String title, IconData icon, bool selected) {
+    return Material(
+      color: Colors.white,
+      child: InkWell(
+        onTap: () {
+          Navigator.pop(context);
+          setState(() {
+            // Logic for drawer item selection
+          });
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(15.0),
+          child: Row(
+            children: [
+              Expanded(
+                child: Icon(
+                  icon,
+                  size: 20,
+                  color: Colors.black,
+                ),
+              ),
+              Expanded(
+                flex: 3,
+                child: Text(
+                  title,
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class MyHeaderDrawer extends StatelessWidget {
+  final String? token;
+  final int userId;
+  final String role;
+  final bool showRole;
+
+  const MyHeaderDrawer({
+    Key? key,
+    required this.token,
+    required this.userId,
+    required this.role,
+    required this.showRole,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Colors.white,
+      width: double.infinity,
+      height: 220,
+      padding: const EdgeInsets.only(top: 20.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const CircleAvatar(
+            radius: 40,
+            backgroundImage: AssetImage('lib/images/user.png'),
+          ),
+          const SizedBox(height: 10),
+          MouseRegion(
+            cursor: SystemMouseCursors.click, // Pointer to a hand
+            child: GestureDetector(
+              onTap: () {
+                // Handle click on "My Account"
+              },
+              child: const Text(
+                "My Account",
+                style: TextStyle(
+                  color: Colors.blue,
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
+          if (showRole)
+            Text(
+              role,
+              style: const TextStyle(
+                color: Colors.black,
+                fontSize: 14,
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+enum DrawerSections {
+  home,
+  request,
+  response,
 }
