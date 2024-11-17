@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:rides_sharing_app/signup_page.dart';
 
 class SigninPage extends StatelessWidget {
-  SigninPage({Key? key}) : super(key: key);
+  SigninPage({super.key});
 
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
