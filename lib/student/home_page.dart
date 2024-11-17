@@ -79,7 +79,6 @@ class _HomePageState extends State<HomePage> {
               if (value == 'Join Group') {
                 // Logic for joining the group
               } else if (value == 'Members') {
-                // Navigate to the MembersPage
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => const MembersPage()),
