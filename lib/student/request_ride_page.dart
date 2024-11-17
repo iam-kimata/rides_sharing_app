@@ -17,21 +17,21 @@ class _RequestPageState extends State<RequestPage> {
       'destination_point': 'Ardhi University',
       'taxi_price': '3000 Tsh',
       'bajaji_price': '2000 Tsh',
-      'xl_price': '40000 Tsh'
+      'xl_price': '4000 Tsh'
     },
     {
       'starting_point': 'Mwenge',
       'destination_point': 'Ardhi University',
       'taxi_price': '2000 Tsh',
-      'bajaji_price': '15000 Tsh',
-      'xl_price': '30000 Tsh'
+      'bajaji_price': '1500 Tsh',
+      'xl_price': '3000 Tsh'
     },
     {
       'starting_point': 'Makongo',
       'destination_point': 'Ardhi University',
       'taxi_price': '3000 Tsh',
-      'bajaji_price': '15000 Tsh',
-      'xl_price': '40000 Tsh'
+      'bajaji_price': '1500 Tsh',
+      'xl_price': '4000 Tsh'
     }
   ];
 
@@ -217,3 +217,5 @@ class VehicleSelectionWidget extends StatelessWidget {
     );
   }
 }
+
+

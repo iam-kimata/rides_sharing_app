@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rides_sharing_app/student/members_page.dart';
+import 'package:rides_sharing_app/student/request_ride_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -288,9 +289,17 @@ class _HomePageState extends State<HomePage> {
       child: InkWell(
         onTap: () {
           Navigator.pop(context);
-          setState(() {
-            // Logic for drawer item selection
-          });
+          if (id == 2) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => RequestPage(
+                  userId: currentUserId ?? 0,
+                  role: "Student",
+                ),
+              ),
+            );
+          }
         },
         child: Padding(
           padding: const EdgeInsets.all(15.0),
