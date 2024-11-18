@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:rides_sharing_app/student/members_page.dart';
+import 'package:rides_sharing_app/student/members.dart';
 import 'package:rides_sharing_app/student/request_ride_page.dart';
+
+import 'driver_response_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -296,6 +298,16 @@ class _HomePageState extends State<HomePage> {
                 builder: (context) => RequestPage(
                   userId: currentUserId ?? 0,
                   role: "Student",
+                ),
+              ),
+            );
+          } else if (id == 3) {
+            // Navigate to Driver Response page
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ResponsePage(
+                  userId: currentUserId ?? 0,
                 ),
               ),
             );

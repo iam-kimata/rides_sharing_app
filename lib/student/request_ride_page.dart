@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rides_sharing_app/student/drivers_selection.dart';
 
 class RequestPage extends StatefulWidget {
   final int userId;
@@ -200,7 +201,15 @@ class VehicleSelectionWidget extends StatelessWidget {
           const SizedBox(width: 10),
           ElevatedButton(
             onPressed: () {
-              // vehicle selection functionality
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => DriverListPage(
+                          tripId: 1,
+                          userId: 1,
+                          selectedPriceType: 'standard',
+                        )),
+              );
             },
             style: ButtonStyle(
               foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
@@ -217,5 +226,3 @@ class VehicleSelectionWidget extends StatelessWidget {
     );
   }
 }
-
-
