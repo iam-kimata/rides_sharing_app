@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:rides_sharing_app/student/members.dart';
 import 'package:rides_sharing_app/student/request_ride_page.dart';
+import 'package:rides_sharing_app/student/driver_response_page.dart';
+import 'package:rides_sharing_app/student/account_page.dart';
 
-import 'driver_response_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -375,7 +376,10 @@ class MyHeaderDrawer extends StatelessWidget {
             cursor: SystemMouseCursors.click, // Pointer to a hand
             child: GestureDetector(
               onTap: () {
-                // Handle click on "My Account"
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const ProfileScreen(token: '',)),
+                );
               },
               child: const Text(
                 "My Account",
