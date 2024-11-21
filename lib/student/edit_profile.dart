@@ -1,40 +1,44 @@
 import 'package:flutter/material.dart';
 
 class EditProfile extends StatefulWidget {
-  final Map<String, dynamic> userData;
-
-  const EditProfile({Key? key, required this.userData}) : super(key: key);
+  const EditProfile({super.key, required Map userData});
 
   @override
   State<EditProfile> createState() => _EditProfileState();
 }
 
 class _EditProfileState extends State<EditProfile> {
-  late TextEditingController nameController;
+  late TextEditingController fullNameController;
   late TextEditingController phoneNumberController;
   late TextEditingController emailController;
-  late FocusNode nameFocusNode;
+  late FocusNode fullNameFocusNode;
   late FocusNode phoneNumberFocusNode;
   late FocusNode emailFocusNode;
+
+  final Map<String, dynamic> userData = {
+    'fullname': 'Aloyce Kimata',
+    'phonenumber': '0784132299',
+    'email': 'kimataaloyce444@gmail.com',
+  };
 
   @override
   void initState() {
     super.initState();
-    nameController = TextEditingController(text: widget.userData['fullname']);
+    fullNameController = TextEditingController(text: userData['fullname']);
     phoneNumberController =
-        TextEditingController(text: widget.userData['phonenumber']);
-    emailController = TextEditingController(text: widget.userData['email']);
-    nameFocusNode = FocusNode();
+        TextEditingController(text: userData['phonenumber']);
+    emailController = TextEditingController(text: userData['email']);
+    fullNameFocusNode = FocusNode();
     phoneNumberFocusNode = FocusNode();
     emailFocusNode = FocusNode();
   }
 
   @override
   void dispose() {
-    nameController.dispose();
+    fullNameController.dispose();
     phoneNumberController.dispose();
     emailController.dispose();
-    nameFocusNode.dispose();
+    fullNameFocusNode.dispose();
     phoneNumberFocusNode.dispose();
     emailFocusNode.dispose();
     super.dispose();
@@ -56,7 +60,7 @@ class _EditProfileState extends State<EditProfile> {
         child: ListView(
           children: [
             const SizedBox(height: 30),
-            buildTextField("Name", nameController, nameFocusNode),
+            buildTextField("Full Name", fullNameController, fullNameFocusNode),
             buildTextField(
                 "Phone Number", phoneNumberController, phoneNumberFocusNode),
             buildTextField("Email", emailController, emailFocusNode),
@@ -66,13 +70,14 @@ class _EditProfileState extends State<EditProfile> {
               children: [
                 OutlinedButton(
                   onPressed: () {
-                    Navigator.pop(context); // Go back without saving
+                    Navigator.pop(context);
                   },
                   style: OutlinedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(horizontal: 50),
+                    padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15), // Increased vertical padding
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
                     ),
+                    minimumSize: const Size(150, 50), // Set minimum height and width
                   ),
                   child: const Text(
                     "CANCEL",
@@ -85,15 +90,15 @@ class _EditProfileState extends State<EditProfile> {
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    // Handle save action (currently no backend call)
-                    Navigator.pop(context); // Close the screen
+                    Navigator.pop(context);
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.blue,
-                    padding: const EdgeInsets.symmetric(horizontal: 50),
+                    padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15), // Increased vertical padding
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
                     ),
+                    minimumSize: const Size(150, 50), // Set minimum height and width
                   ),
                   child: const Text(
                     "SAVE",

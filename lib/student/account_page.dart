@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rides_sharing_app/student/edit_profile.dart';
 
 class ProfileScreen extends StatelessWidget {
   final String token;
@@ -20,7 +21,10 @@ class ProfileScreen extends StatelessWidget {
         actions: [
           TextButton(
             onPressed: () {
-              // Action for the Edit button
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const EditProfile(userData: {},)),
+              );
             },
             style: TextButton.styleFrom(
               foregroundColor: Colors.blue,
