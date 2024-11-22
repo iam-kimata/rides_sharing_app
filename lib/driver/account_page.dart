@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:rides_sharing_app/driver/edit_profile.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreenDriver extends StatelessWidget {
   final String token;
 
-  const ProfileScreen({super.key, required this.token});
+  const ProfileScreenDriver({super.key, required this.token});
 
   @override
   Widget build(BuildContext context) {
