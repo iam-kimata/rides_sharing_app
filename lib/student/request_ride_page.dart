@@ -225,4 +225,7 @@ class VehicleSelectionWidget extends StatelessWidget {
       ),
     );
   }
+
 }
+
+
