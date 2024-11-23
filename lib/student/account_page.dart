@@ -1,5 +1,9 @@
+import 'dart:js';
+
 import 'package:flutter/material.dart';
 import 'package:rides_sharing_app/student/edit_profile.dart';
+import 'package:rides_sharing_app/student/request_ride_page.dart';
+import 'package:rides_sharing_app/student/driver_response_page.dart';
 
 class ProfileScreen extends StatelessWidget {
   final String token;
@@ -18,12 +22,17 @@ class ProfileScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
+        iconTheme: const IconThemeData(color: Colors.black),
         actions: [
           TextButton(
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const EditProfile(userData: {},)),
+                MaterialPageRoute(
+                  builder: (context) => EditProfile(
+                    userData: userData,
+                  ),
+                ),
               );
             },
             style: TextButton.styleFrom(
@@ -38,6 +47,28 @@ class ProfileScreen extends StatelessWidget {
             ),
           ),
         ],
+      ),
+      drawer: Drawer(
+        child: Container(
+          color: Colors.white,
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                MyHeaderDrawer(
+                  token: token,
+                  userId: 1,
+                  role: "Student",
+                  showRole: false,
+                ),
+                Container(
+                  height: 3,
+                  color: Colors.grey[300],
+                ),
+                MyDrawerList(),
+              ],
+            ),
+          ),
+        ),
       ),
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
@@ -101,6 +132,140 @@ class ProfileScreen extends StatelessWidget {
         subtitle: Text(subtitle),
         leading: Icon(iconData),
         tileColor: Colors.white,
+      ),
+    );
+  }
+
+  Widget MyDrawerList() {
+    return Container(
+      padding: const EdgeInsets.only(top: 15),
+      child: Column(
+        children: [
+          menuItem(1, "Home", Icons.home, false),
+          menuItem(2, "Request Ride", Icons.directions_car, false),
+          menuItem(3, "Driver Response", Icons.feedback, false),
+        ],
+      ),
+    );
+  }
+
+  Widget menuItem(int id, String title, IconData icon, bool selected) {
+    return Material(
+      color: Colors.white,
+      child: InkWell(
+        onTap: () {
+          if (id == 1) {
+            Navigator.pop(context as BuildContext);
+          } else if (id == 2) {
+            Navigator.push(
+              context as BuildContext,
+              MaterialPageRoute(
+                builder: (context) => const RequestPage(
+                  userId: 1,
+                  role: "Student",
+                ),
+              ),
+            );
+          } else if (id == 3) {
+            Navigator.push(
+              context as BuildContext,
+              MaterialPageRoute(
+                builder: (context) => ResponsePage(
+                  userId: 1,
+                ),
+              ),
+            );
+          }
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(15.0),
+          child: Row(
+            children: [
+              Expanded(
+                child: Icon(
+                  icon,
+                  size: 20,
+                  color: Colors.black,
+                ),
+              ),
+              Expanded(
+                flex: 3,
+                child: Text(
+                  title,
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: selected ? FontWeight.bold : FontWeight.normal,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class MyHeaderDrawer extends StatelessWidget {
+  final String? token;
+  final int userId;
+  final String role;
+  final bool showRole;
+
+  const MyHeaderDrawer({
+    super.key,
+    required this.token,
+    required this.userId,
+    required this.role,
+    required this.showRole,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Colors.white,
+      width: double.infinity,
+      height: 220,
+      padding: const EdgeInsets.only(top: 20.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const CircleAvatar(
+            radius: 40,
+            backgroundImage: AssetImage('lib/images/user.png'),
+          ),
+          const SizedBox(height: 10),
+          MouseRegion(
+            cursor: SystemMouseCursors.click, // Pointer to a hand
+            child: GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const ProfileScreen(
+                            token: '',
+                          )),
+                );
+              },
+              child: const Text(
+                "My Account",
+                style: TextStyle(
+                  color: Colors.blue,
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
+          if (showRole)
+            Text(
+              role,
+              style: const TextStyle(
+                color: Colors.black,
+                fontSize: 14,
+              ),
+            ),
+        ],
       ),
     );
   }

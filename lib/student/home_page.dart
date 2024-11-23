@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:rides_sharing_app/student/members.dart';
+import 'package:rides_sharing_app/student/account_page.dart';
 import 'package:rides_sharing_app/student/request_ride_page.dart';
 import 'package:rides_sharing_app/student/driver_response_page.dart';
-import 'package:rides_sharing_app/student/account_page.dart';
-
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -331,7 +330,6 @@ class _HomePageState extends State<HomePage> {
                   title,
                   style: const TextStyle(
                     color: Colors.black,
-                    fontSize: 16,
                   ),
                 ),
               ),
