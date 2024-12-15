@@ -29,9 +29,9 @@ class _HomePageState extends State<HomePage> {
       "time": "12:31 PM",
       "date": "2024-11-17",
     },
-  ]; // Sample hardcoded data
+  ];
   ScrollController _scrollController = ScrollController();
-  int? currentUserId = 1; // Default user ID for testing
+  int? currentUserId = 1;
   bool isUserScrollingUp = false;
 
   var currentPage = DrawerSections.home;
@@ -371,7 +371,7 @@ class MyHeaderDrawer extends StatelessWidget {
           ),
           const SizedBox(height: 10),
           MouseRegion(
-            cursor: SystemMouseCursors.click, // Pointer to a hand
+            cursor: SystemMouseCursors.click,
             child: GestureDetector(
               onTap: () {
                 Navigator.push(

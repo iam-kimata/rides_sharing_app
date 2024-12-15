@@ -1,24 +1,30 @@
-import 'dart:js';
-
 import 'package:flutter/material.dart';
 import 'package:rides_sharing_app/student/edit_profile.dart';
+import 'package:rides_sharing_app/student/home_page.dart';
 import 'package:rides_sharing_app/student/request_ride_page.dart';
 import 'package:rides_sharing_app/student/driver_response_page.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   final String token;
 
   const ProfileScreen({super.key, required this.token});
 
   @override
-  Widget build(BuildContext context) {
-    // Mock user data
-    final userData = {
-      'fullname': 'Aloyce Kimata',
-      'phonenumber': '0784132299',
-      'email': 'kimataaloyce444@gmail.com',
-    };
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
 
+class _ProfileScreenState extends State<ProfileScreen> {
+  // Mock user data
+  final userData = {
+    'fullname': 'Aloyce Kimata',
+    'phonenumber': '0784132299',
+    'email': 'kimataaloyce444@gmail.com',
+  };
+
+  var currentPage = DrawerSections.home;
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -55,7 +61,7 @@ class ProfileScreen extends StatelessWidget {
             child: Column(
               children: [
                 MyHeaderDrawer(
-                  token: token,
+                  token: widget.token,
                   userId: 1,
                   role: "Student",
                   showRole: false,
@@ -154,28 +160,37 @@ class ProfileScreen extends StatelessWidget {
       color: Colors.white,
       child: InkWell(
         onTap: () {
-          if (id == 1) {
-            Navigator.pop(context as BuildContext);
-          } else if (id == 2) {
-            Navigator.push(
-              context as BuildContext,
-              MaterialPageRoute(
-                builder: (context) => const RequestPage(
-                  userId: 1,
-                  role: "Student",
+          Navigator.pop(context);
+          setState(() {
+            if (id == 1) {
+              currentPage = DrawerSections.home;
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const HomePage()),
+              );
+            } else if (id == 2) {
+              currentPage = DrawerSections.request;
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const RequestPage(
+                    userId: 1,
+                    role: "Student",
+                  ),
                 ),
-              ),
-            );
-          } else if (id == 3) {
-            Navigator.push(
-              context as BuildContext,
-              MaterialPageRoute(
-                builder: (context) => ResponsePage(
-                  userId: 1,
+              );
+            } else if (id == 3) {
+              currentPage = DrawerSections.response;
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const ResponsePage(
+                    userId: 1,
+                  ),
                 ),
-              ),
-            );
-          }
+              );
+            }
+          });
         },
         child: Padding(
           padding: const EdgeInsets.all(15.0),
@@ -205,6 +220,8 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 }
+
+enum DrawerSections { home, request, response }
 
 class MyHeaderDrawer extends StatelessWidget {
   final String? token;
@@ -236,15 +253,13 @@ class MyHeaderDrawer extends StatelessWidget {
           ),
           const SizedBox(height: 10),
           MouseRegion(
-            cursor: SystemMouseCursors.click, // Pointer to a hand
+            cursor: SystemMouseCursors.click,
             child: GestureDetector(
               onTap: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => const ProfileScreen(
-                            token: '',
-                          )),
+                      builder: (context) => const ProfileScreen(token: '')),
                 );
               },
               child: const Text(

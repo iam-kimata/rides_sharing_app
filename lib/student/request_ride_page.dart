@@ -287,7 +287,7 @@ class MyHeaderDrawer extends StatelessWidget {
           ),
           const SizedBox(height: 10),
           MouseRegion(
-            cursor: SystemMouseCursors.click, // Pointer to a hand
+            cursor: SystemMouseCursors.click,
             child: GestureDetector(
               onTap: () {
                 Navigator.push(
