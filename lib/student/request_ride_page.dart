@@ -1,6 +1,5 @@
-import 'dart:js';
-
 import 'package:flutter/material.dart';
+import 'package:rides_sharing_app/student/home_page.dart';
 import 'package:rides_sharing_app/student/drivers_selection.dart';
 import 'package:rides_sharing_app/student/driver_response_page.dart';
 import 'package:rides_sharing_app/student/account_page.dart';
@@ -44,15 +43,12 @@ class _RequestPageState extends State<RequestPage> {
 
   @override
   Widget build(BuildContext context) {
-    final Size size = MediaQuery.of(context).size;
-
     return Scaffold(
       appBar: AppBar(
         title: const Text(
           'Select a ride route',
           style: TextStyle(fontSize: 25.0),
         ),
-        automaticallyImplyLeading: true, // Ensures the hamburger menu is shown
       ),
       drawer: Drawer(
         child: Container(
@@ -66,10 +62,7 @@ class _RequestPageState extends State<RequestPage> {
                   role: widget.role,
                   showRole: false,
                 ),
-                Container(
-                  height: 3,
-                  color: Colors.grey[300],
-                ),
+                Container(height: 3, color: Colors.grey[300]),
                 MyDrawerList(currentPage: currentPage),
               ],
             ),
@@ -80,8 +73,7 @@ class _RequestPageState extends State<RequestPage> {
         itemCount: routes.length,
         itemBuilder: (context, index) {
           return Padding(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
             child: GestureDetector(
               onTap: () {
                 showDialog(
@@ -89,22 +81,18 @@ class _RequestPageState extends State<RequestPage> {
                   builder: (BuildContext context) {
                     return AlertDialog(
                       title: Text(
-                          'Select a Vehicle from ${routes[index]['starting_point']} to ${routes[index]['destination_point']}'),
+                        'Select a Vehicle from ${routes[index]['starting_point']} to ${routes[index]['destination_point']}',
+                      ),
                       content: VehicleSelectionWidget(
                         taxiPrice: routes[index]['taxi_price']!,
                         bajajiPrice: routes[index]['bajaji_price']!,
                         xlPrice: routes[index]['xl_price']!,
                       ),
-                      actions: <Widget>[
+                      actions: [
                         TextButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                          child: const Text(
-                            'Close',
-                            style: TextStyle(color: Colors.blue),
-                          ),
-                        ),
+                          onPressed: () => Navigator.of(context).pop(),
+                          child: const Text('Close'),
+                        )
                       ],
                     );
                   },
@@ -126,7 +114,8 @@ class _RequestPageState extends State<RequestPage> {
                 child: ListTile(
                   leading: const Icon(Icons.location_on),
                   title: Text(
-                      '${routes[index]['starting_point']} to ${routes[index]['destination_point']}'),
+                    '${routes[index]['starting_point']} → ${routes[index]['destination_point']}',
+                  ),
                 ),
               ),
             ),
@@ -151,106 +140,67 @@ class VehicleSelectionWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(height: 10),
-          _buildVehicleItem(context, 'Taxi', taxiPrice, 4),
-          _buildVehicleItem(context, 'Bajaji', bajajiPrice, 3),
-          _buildVehicleItem(context, 'XL', xlPrice, 6),
-        ],
-      ),
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        _buildVehicleItem(context, 'Taxi', taxiPrice, 4),
+        _buildVehicleItem(context, 'Bajaji', bajajiPrice, 3),
+        _buildVehicleItem(context, 'XL', xlPrice, 6),
+      ],
     );
   }
 
   Widget _buildVehicleItem(
       BuildContext context, String name, String price, int capacity) {
-    IconData iconData;
-    Color iconColor;
-    switch (name) {
-      case 'Taxi':
-        iconData = Icons.directions_car;
-        iconColor = Colors.black;
-        break;
-      case 'Bajaji':
-        iconData = Icons.local_shipping;
-        iconColor = Colors.black;
-        break;
-      case 'XL':
-        iconData = Icons.directions_bus;
-        iconColor = Colors.black;
-        break;
-      default:
-        iconData = Icons.directions_car;
-        iconColor = Colors.black;
-    }
+    IconData icon = Icons.directions_car;
+
+    if (name == 'Bajaji') icon = Icons.local_shipping;
+    if (name == 'XL') icon = Icons.directions_bus;
 
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 5.0),
-      padding: const EdgeInsets.all(10.0),
+      margin: const EdgeInsets.symmetric(vertical: 6),
+      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: Colors.grey[200],
-        borderRadius: BorderRadius.circular(8.0),
+        borderRadius: BorderRadius.circular(6),
       ),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(
-            iconData,
-            size: 30.0,
-            color: iconColor,
-          ),
+          Icon(icon, size: 32),
           const SizedBox(width: 10),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  name,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16.0,
-                  ),
-                  overflow: TextOverflow.ellipsis,
-                ),
-                const SizedBox(height: 5),
+                Text(name,
+                    style:
+                    const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                 Text(price),
                 Row(
                   children: [
-                    const Icon(Icons.group, size: 16.0),
-                    const SizedBox(width: 4),
-                    Text('$capacity people'),
+                    const Icon(Icons.group, size: 16),
+                    const SizedBox(width: 5),
+                    Text("$capacity people")
                   ],
                 ),
               ],
             ),
           ),
-          const SizedBox(width: 10),
           ElevatedButton(
             onPressed: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => DriverListPage(
-                          tripId: 1,
-                          userId: 1,
-                          selectedPriceType: 'standard',
-                        )),
+                  builder: (context) => DriverListPage(
+                    tripId: 1,
+                    userId: 1,
+                    selectedPriceType: "standard",
+                  ),
+                ),
               );
             },
-            style: ButtonStyle(
-              foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
-              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.zero,
-                ),
-              ),
-            ),
-            child: const Text('Select'),
-          ),
+            child: const Text("Select"),
+          )
         ],
       ),
     );
@@ -274,48 +224,27 @@ class MyHeaderDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.white,
-      width: double.infinity,
       height: 220,
-      padding: const EdgeInsets.only(top: 20.0),
+      color: Colors.white,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const CircleAvatar(
             radius: 40,
-            backgroundImage: AssetImage('lib/images/user.png'),
+            backgroundImage: AssetImage("lib/images/user.png"),
           ),
           const SizedBox(height: 10),
-          MouseRegion(
-            cursor: SystemMouseCursors.click,
-            child: GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const ProfileScreen(
-                            token: '',
-                          )),
-                );
-              },
-              child: const Text(
-                "My Account",
-                style: TextStyle(
-                  color: Colors.blue,
-                  fontSize: 15,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
+          GestureDetector(
+            onTap: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => const ProfileScreen(token: "")));
+            },
+            child: const Text(
+              "My Account",
+              style: TextStyle(fontSize: 16, color: Colors.blue),
             ),
           ),
-          if (showRole)
-            Text(
-              role,
-              style: const TextStyle(
-                color: Colors.black,
-                fontSize: 14,
-              ),
-            ),
+          if (showRole) Text(role),
         ],
       ),
     );
@@ -329,75 +258,54 @@ class MyDrawerList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.only(top: 15),
-      child: Column(
-        children: [
-          menuItem(1, "Home", Icons.home, currentPage == DrawerSections.home),
-          menuItem(2, "Request Ride", Icons.directions_car,
-              currentPage == DrawerSections.request),
-          menuItem(3, "Driver Response", Icons.feedback,
-              currentPage == DrawerSections.response),
-        ],
-      ),
+    return Column(
+      children: [
+        menuItem(context, 1, "Home", Icons.home),
+        menuItem(context, 2, "Request Ride", Icons.directions_car),
+        menuItem(context, 3, "Driver Response", Icons.feedback),
+      ],
     );
   }
 
-  Widget menuItem(int id, String title, IconData icon, bool selected) {
-    return Material(
-      color: Colors.white,
-      child: InkWell(
-        onTap: () {
-          Navigator.pop(context as BuildContext);
-          if (id == 2) {
-            Navigator.push(
-              context as BuildContext,
-              MaterialPageRoute(
-                builder: (context) => const RequestPage(
-                  userId: 1,
-                  role: "Student",
-                ),
+  Widget menuItem(BuildContext context, int id, String title, IconData icon) {
+    return InkWell(
+      onTap: () {
+        Navigator.pop(context);
+
+        if (id == 1) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const HomePage()),
+          );
+        } else if (id == 2) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const RequestPage(
+                userId: 1,
+                role: "Student",
               ),
-            );
-          } else if (id == 3) {
-            Navigator.push(
-              context as BuildContext,
-              MaterialPageRoute(
-                builder: (context) => ResponsePage(userId: 1),
-              ),
-            );
-          }
-        },
-        child: Padding(
-          padding: const EdgeInsets.all(15.0),
-          child: Row(
-            children: [
-              Expanded(
-                child: Icon(
-                  icon,
-                  size: 20,
-                  color: Colors.black,
-                ),
-              ),
-              Expanded(
-                flex: 3,
-                child: Text(
-                  title,
-                  style: const TextStyle(
-                    color: Colors.black,
-                  ),
-                ),
-              ),
-            ],
-          ),
+            ),
+          );
+        } else if (id == 3) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => ResponsePage(userId: 1)),
+          );
+        }
+      },
+      child: Padding(
+        padding: const EdgeInsets.all(15),
+        child: Row(
+          children: [
+            Icon(icon, size: 22),
+            const SizedBox(width: 20),
+            Text(title, style: const TextStyle(fontSize: 16)),
+          ],
         ),
       ),
     );
   }
 }
 
-enum DrawerSections {
-  home,
-  request,
-  response,
-}
+enum DrawerSections { home, request, response }
