@@ -1,12 +1,105 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:rides_sharing_app/api/api.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 import 'package:rides_sharing_app/signup_page.dart';
 import 'package:rides_sharing_app/student/home_page.dart';
+import 'package:rides_sharing_app/driver/home_page.dart';
 
 class SigninPage extends StatelessWidget {
   SigninPage({super.key});
 
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
+
+  // ---------------- BACKEND FUNCTION ADDED ---------------- //
+  Future<void> signUserIn(BuildContext context) async {
+    String username = usernameController.text;
+    String password = passwordController.text;
+
+    var url = Uri.parse('$baseUrl/login');
+
+    try {
+      var response = await http.post(
+        url,
+        body: {
+          'email': username,
+          'password': password,
+        },
+        headers: {
+          'Accept': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        var responseData = json.decode(response.body);
+
+        String token = responseData['token'];
+        String role = responseData['user']['role'];
+        int id = responseData['user']['id'];
+
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setString('token', token);
+        await prefs.setInt('userId', id);
+        await prefs.setString('role', role);
+
+        // ROLE-BASED NAVIGATION
+        switch (role) {
+          case 'Student':
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const HomePage(),
+              ),
+            );
+            break;
+
+          case 'Driver':
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const HomePageDriver(),
+              ),
+            );
+            break;
+
+          default:
+            print("Unknown role: $role");
+        }
+      } else {
+        var errorData = json.decode(response.body);
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Error'),
+            content: Text('Login failed: ${errorData['message']}'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
+      }
+    } catch (error) {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Error'),
+          content: Text('An error occurred: $error'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,6 +143,8 @@ class SigninPage extends StatelessWidget {
                 obscureText: true,
               ),
               const SizedBox(height: 25),
+
+              // SIGN IN BUTTON (BACKEND ADDED)
               Container(
                 padding: const EdgeInsets.all(25),
                 margin: const EdgeInsets.symmetric(horizontal: 25),
@@ -58,12 +153,7 @@ class SigninPage extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const HomePage()),
-                    );
-                  },
+                  onTap: () => signUserIn(context), // ← BACKEND LOGIN HERE
                   child: const Center(
                     child: Text(
                       "Sign in",
@@ -76,6 +166,7 @@ class SigninPage extends StatelessWidget {
                   ),
                 ),
               ),
+
               const SizedBox(height: 25),
               GestureDetector(
                 onTap: () {
@@ -120,7 +211,7 @@ class SigninPage extends StatelessWidget {
   }
 }
 
-// Custom TextField widget for username and password input fields.
+// Custom TextField widget
 class MyTextField extends StatelessWidget {
   final TextEditingController controller;
   final String hintText;
@@ -144,8 +235,8 @@ class MyTextField extends StatelessWidget {
           enabledBorder: const OutlineInputBorder(
             borderSide: BorderSide(color: Colors.white),
           ),
-          focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.grey.shade400),
+          focusedBorder: const OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.grey),
           ),
           fillColor: Colors.grey.shade200,
           filled: true,

@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:rides_sharing_app/api/api.dart';
 
 class SignupPage extends StatefulWidget {
   const SignupPage({super.key});
@@ -13,14 +16,16 @@ class _SignupPageState extends State<SignupPage> {
   String? selectedVehicleColor;
   String? selectedWorkingLocation;
 
+  bool isLoading = false; // <-- ADDED
+
   final TextEditingController fullNameController = TextEditingController();
   final TextEditingController phoneNumberController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController licensePlateNumberController =
-  TextEditingController();
+      TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController =
-  TextEditingController();
+      TextEditingController();
 
   void resetInputFields() {
     fullNameController.clear();
@@ -146,39 +151,26 @@ class _SignupPageState extends State<SignupPage> {
                 child: MaterialButton(
                   minWidth: double.infinity,
                   height: 60,
-                  onPressed: () {
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: const Text("Success"),
-                          content: const Text("Account created locally!"),
-                          actions: <Widget>[
-                            TextButton(
-                              child: const Text("OK"),
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                            ),
-                          ],
-                        );
-                      },
-                    );
-                    resetInputFields();
-                  },
+                  onPressed: isLoading
+                      ? null
+                      : () {
+                          registerUser(); // <-- ADDED
+                        },
                   color: Colors.black,
                   elevation: 0,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(50),
                   ),
-                  child: const Text(
-                    "Register",
-                    style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 18,
-                      color: Colors.white,
-                    ),
-                  ),
+                  child: isLoading
+                      ? const CircularProgressIndicator(color: Colors.white)
+                      : const Text(
+                          "Register",
+                          style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 18,
+                            color: Colors.white,
+                          ),
+                        ),
                 ),
               ),
               const SizedBox(height: 25),
@@ -207,7 +199,112 @@ class _SignupPageState extends State<SignupPage> {
       ),
     );
   }
+
+  // ---------------- BACKEND FUNCTION ADDED ---------------- //
+  Future<void> registerUser() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    final url = Uri.parse('${baseUrl}/register');
+
+    final body = json.encode({
+      'role': selectedCategory,
+      'fullname': fullNameController.text,
+      'phonenumber': phoneNumberController.text,
+      'email': emailController.text,
+      'vehicletype': selectedCategory == "Driver" ? selectedVehicleType : null,
+      'vehiclecolor':
+          selectedCategory == "Driver" ? selectedVehicleColor : null,
+      'platenumber': selectedCategory == "Driver"
+          ? licensePlateNumberController.text
+          : null,
+      'location': selectedCategory == "Driver" ? selectedWorkingLocation : null,
+      'password': passwordController.text,
+      'cpassword': confirmPasswordController.text,
+    });
+
+    try {
+      final response = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: body,
+      );
+
+      if (response.statusCode == 201) {
+        final responseBody = json.decode(response.body);
+        print('Registration successful: ${responseBody['message']}');
+
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text("Success"),
+              content: const Text("Account created successfully!"),
+              actions: <Widget>[
+                TextButton(
+                  child: const Text("OK"),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          },
+        );
+
+        resetInputFields();
+      } else {
+        print('Failed: ${response.body}');
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text("Failed"),
+              content: Text("Failed to register: ${response.body}"),
+              actions: <Widget>[
+                TextButton(
+                  child: const Text("OK"),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      }
+    } catch (e) {
+      print('Error: $e');
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text("Error"),
+            content: Text("Error: $e"),
+            actions: <Widget>[
+              TextButton(
+                child: const Text("OK"),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
 }
+
+// -------------------------------------------------------------- //
 
 Widget inputFile({
   required String label,
